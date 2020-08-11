@@ -140,25 +140,36 @@ void
 userinit(void)
 {
 	struct proc *p;
+	////_binary_initcode_start和_binary_initcode_size，表示了二进制码的位置和大小
 	extern char _binary_initcode_start[], _binary_initcode_size[];
 
 	p = allocproc();
+	// 在页表中分配一个槽（即结构体struct proc），并初始化进程的状态，为其内核线程的运行做准备
+	//通用的，即不仅被第一个进程使用，也要被每个新建的进程使用
 
 	initproc = p;
+	//setupkvm为进程创建一个（最初）只映射内核区的页表
 	if ((p->pgdir = setupkvm()) == 0)
 		panic("userinit: out of memory?");
+	//分配一页物理内存，将虚拟地址0映射到那一段内存，并把二进制码（initcode.S）拷贝到那一页中
 	inituvm(p->pgdir, _binary_initcode_start, (int)_binary_initcode_size);
 	p->sz = PGSIZE;
 	memset(p->tf, 0, sizeof(*p->tf));
+	//寄存器保存着一个段选择器， 指向段SEG_UCODE并处于特权级 DPL_USER（即在用户模式而非内核模式）
 	p->tf->cs = (SEG_UCODE << 3) | DPL_USER;
+	//`%ds, %es, %ss` 的段选择器指向段SEG_UDATA并处于特权级DPL_USER
 	p->tf->ds = (SEG_UDATA << 3) | DPL_USER;
 	p->tf->es = p->tf->ds;
 	p->tf->ss = p->tf->ds;
+	//%eflags的FL_IF位被设置为允许硬件中断
 	p->tf->eflags = FL_IF;
+	//%esp被设为了进程的最大有效虚拟内存，即p->sz
 	p->tf->esp = PGSIZE;
+	//%eip是开始执行的地方
 	p->tf->eip = 0;  // beginning of initcode.S
-
+	//将p->name设置为initcode方便调试
 	safestrcpy(p->name, "initcode", sizeof(p->name));
+	//p->cwd设置为进程当前的工作目录
 	p->cwd = namei("/");
 
 	// this assignment to p->state lets other cores
@@ -166,7 +177,7 @@ userinit(void)
 	// writes to be visible, and the lock is also needed
 	// because the assignment might not be atomic.
 	acquire(&ptable.lock);
-
+	//进程初始化完毕,userinit将p->state设置为RUNNABLE，使进程能够被调度
 	p->state = RUNNABLE;
 
 	release(&ptable.lock);

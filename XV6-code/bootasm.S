@@ -18,35 +18,35 @@ movw    %ax, %ds             # ->Data Segment
 movw    %ax, %es             # ->Extra Segment
 movw    %ax, %ss             # ->Stack Segment
 
-//Gate-A20»áÊ¹µÃA20µØÖ·Ïß±»ÓÀÔ¶ÖÃÁã
+//Gate-A20ä¼šä½¿å¾—A20åœ°å€çº¿è¢«æ°¸è¿œç½®é›¶
 # Physical address line A20 is tied to zero so that the first PCs
 # with 2 MB would run software that assumed 1 MB.Undo that.
-//µÚÒ»¸öµÈ´ı
+//ç¬¬ä¸€ä¸ªç­‰å¾…
 seta20.1:
-//inb->Ğ´Èëbyte
-//´Ó8042µÄ0x64¶Ë¿Ú¶ÁÈ¡ĞÅÏ¢
+//inb->å†™å…¥byte
+//ä»8042çš„0x64ç«¯å£è¯»å–ä¿¡æ¯
 inb     $0x64, %al               # Wait for not busy
-//²âÊÔÊÇ·ñbusy(Óë²Ù×÷£¬Ö÷ÒªÊÇÎªÁËÅĞ¶Ï1ºÅÎ»£¬Ò²¾ÍÊÇÊäÈë»º³åÆ÷ÊÇ·ñÓĞÖµ)
+//æµ‹è¯•æ˜¯å¦busy(ä¸æ“ä½œï¼Œä¸»è¦æ˜¯ä¸ºäº†åˆ¤æ–­1å·ä½ï¼Œä¹Ÿå°±æ˜¯è¾“å…¥ç¼“å†²å™¨æ˜¯å¦æœ‰å€¼)
 testb   $0x2, %al
-//ÓĞÖµÊ±Ìø»Øseta20.1£¬Ñ­»·µÈ´ı
+//æœ‰å€¼æ—¶è·³å›seta20.1ï¼Œå¾ªç¯ç­‰å¾…
 jnz     seta20.1
 
-//Ã»ÓĞÖµ(¿ÕÏĞ)Ê±£¬½«Ö¸Áî$0xd1´æÈë¼Ä´æÆ÷
+//æ²¡æœ‰å€¼(ç©ºé—²)æ—¶ï¼Œå°†æŒ‡ä»¤$0xd1å­˜å…¥å¯„å­˜å™¨
 movb    $0xd1, %al               # 0xd1->port 0x64
-//Ïò0x64Ğ´ĞÅÏ¢£¬Õâ¸öÃüÁîµÄÒâË¼ÊÇ×¼±¸Ğ´Output¶Ë¿Ú¡£
-//ËæºóÍ¨¹ı60h¶Ë¿ÚĞ´ÈëµÄ×Ö½Ú£¬»á±»·ÅÖÃÔÚOutput PortÖĞ¡£Output PortÖĞ°üº¬ÁËGateA20
+//å‘0x64å†™ä¿¡æ¯ï¼Œè¿™ä¸ªå‘½ä»¤çš„æ„æ€æ˜¯å‡†å¤‡å†™Outputç«¯å£ã€‚
+//éšåé€šè¿‡60hç«¯å£å†™å…¥çš„å­—èŠ‚ï¼Œä¼šè¢«æ”¾ç½®åœ¨Output Portä¸­ã€‚Output Portä¸­åŒ…å«äº†GateA20
 outb    %al, $0x64
 
-//µÚ¶ş¸öµÈ´ı
+//ç¬¬äºŒä¸ªç­‰å¾…
 seta20.2:
-//ÀàËÆµÄÒªÅĞ¶ÏÊÇ·ñbusy
+//ç±»ä¼¼çš„è¦åˆ¤æ–­æ˜¯å¦busy
 inb     $0x64, %al               # Wait for not busy
 testb   $0x2, %al
 jnz     seta20.2
 
-//¿ÕÏĞÊ±½«0xdf·ÅÈë¼Ä´æÆ÷£¬º¬ÒåÊÇ´ò¿ª¶Ë¿Ú
+//ç©ºé—²æ—¶å°†0xdfæ”¾å…¥å¯„å­˜å™¨ï¼Œå«ä¹‰æ˜¯æ‰“å¼€ç«¯å£
 movb    $0xdf, %al               # 0xdf->port 0x60
-//Ïò¶ÁĞ´¶Ë¿Ú0x60ÖĞĞ´ĞÅÏ¢0xdf£¬ÕâÑù¾Í´ò¿ªÁËGateA20µÄ¿ª¹Ø£¬Ïàµ±ÓÚµçÂ·Á¬×Å
+//å‘è¯»å†™ç«¯å£0x60ä¸­å†™ä¿¡æ¯0xdfï¼Œè¿™æ ·å°±æ‰“å¼€äº†GateA20çš„å¼€å…³ï¼Œç›¸å½“äºç”µè·¯è¿ç€
 outb    %al, $0x60
 
 # Switch from real to protected mode.Use a bootstrap GDT that makes
@@ -61,7 +61,7 @@ movl    %eax, %cr0
 # Complete the transition to 32 - bit protected mode by using a long jmp
 # to reload %cs and %eip.The segment descriptors are set up with no
 # translation, so that the mapping is still the identity mapping.
-ljmp    $(SEG_KCODE << 3), $start32
+ljmp    $(SEG_KCODE << 3), $start32   ;#define SEG_KCODE 1  // kernel code
 
 .code32  # Tell assembler to generate 32 - bit code now.
 start32:
@@ -75,7 +75,7 @@ movw    %ax, %fs                # ->FS
 movw    %ax, %gs                # ->GS
 
 # Set up the stack pointer and call into C.
-movl    $start, %esp
+movl    $start, %esp            ;start is 7c00
 call    bootmain
 
 # If bootmain returns(it shouldn't), trigger a Bochs

@@ -43,16 +43,16 @@ _start = V2P_WO(entry)
 # Entering xv6 on boot processor, with paging off.
 .globl entry
 entry:
-  //cr4¼Ä´æÆ÷ÉèÖÃ»áÆô¶¯4MBµÄ·ÖÒ³ÅäÖÃ
+  //cr4å¯„å­˜å™¨è®¾ç½®ä¼šå¯åŠ¨4MBçš„åˆ†é¡µé…ç½®
   # Turn on page size extension for 4Mbyte pages
   movl    %cr4, %eax
   orl     $(CR4_PSE), %eax
   movl    %eax, %cr4
-  //ÉèÖÃÒ³±í
+  //è®¾ç½®é¡µè¡¨
   # Set page directory
   movl    $(V2P_WO(entrypgdir)), %eax
   movl    %eax, %cr3
-  //ÉèÖÃcr0¿ÉÒÔ¿ªÆô·ÖÒ³¹¦ÄÜ
+  //è®¾ç½®cr0å¯ä»¥å¼€å¯åˆ†é¡µåŠŸèƒ½
   # Turn on paging.
   movl    %cr0, %eax
   orl     $(CR0_PG|CR0_WP), %eax

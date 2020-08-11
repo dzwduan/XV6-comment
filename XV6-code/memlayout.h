@@ -1,20 +1,20 @@
 // Memory layout
-//ÄÚ´æ²¼¾Ö
-//ĞéÄâµØÖ·¿Õ¼äKERNBASEÒÔÉÏ²¿·ÖÓ³Éäµ½ÎïÀíÄÚ´æµÍµØÖ·ÏàÓ¦Î»ÖÃ
-//ÄÚºËÄ©Î²ÎïÀíµØÖ·µ½ÎïÀíµØÖ·PHYSTOPµÄÄÚ´æ¿Õ¼äÎ´Ê¹ÓÃ 
+//å†…å­˜å¸ƒå±€
+//è™šæ‹Ÿåœ°å€ç©ºé—´KERNBASEä»¥ä¸Šéƒ¨åˆ†æ˜ å°„åˆ°ç‰©ç†å†…å­˜ä½åœ°å€ç›¸åº”ä½ç½®
+//å†…æ ¸æœ«å°¾ç‰©ç†åœ°å€åˆ°ç‰©ç†åœ°å€PHYSTOPçš„å†…å­˜ç©ºé—´æœªä½¿ç”¨ 
 
-#define EXTMEM  0x100000            // Start of extended memoryÄÚºË³¤¶È
-#define PHYSTOP 0xE000000           // Top physical memoryÎïÀíµØÖ·µÄ½áÊø
-#define DEVSPACE 0xFE000000         // Other devices are at high addressesĞéÄâÄÚ´æÖĞÆäËûÉè±¸µÄµØÖ·
+#define EXTMEM  0x100000            // Start of extended memoryå†…æ ¸é•¿åº¦
+#define PHYSTOP 0xE000000           // Top physical memoryç‰©ç†åœ°å€çš„ç»“æŸ
+#define DEVSPACE 0xFE000000         // Other devices are at high addressesè™šæ‹Ÿå†…å­˜ä¸­å…¶ä»–è®¾å¤‡çš„åœ°å€
 
 // Key addresses for address space layout (see kmap in vm.c for layout)
-#define KERNBASE 0x80000000         // First kernel virtual address³õÊ¼µÄÄÚºËĞéÄâÄÚ´æµØÖ·
-#define KERNLINK (KERNBASE+EXTMEM)  // Address where kernel is linkedÄÚºË½áÊøµØÖ·
+#define KERNBASE 0x80000000         // First kernel virtual addressåˆå§‹çš„å†…æ ¸è™šæ‹Ÿå†…å­˜åœ°å€
+#define KERNLINK (KERNBASE+EXTMEM)  // Address where kernel is linkedå†…æ ¸ç»“æŸåœ°å€
 
-//Ê¹ÓÃÔ¤´¦Àíº¯Êı£¬½«ĞéÄâµØÖ·×ªÎªÎïÀíµØÖ·
+//ä½¿ç”¨é¢„å¤„ç†å‡½æ•°ï¼Œå°†è™šæ‹Ÿåœ°å€è½¬ä¸ºç‰©ç†åœ°å€
 #define V2P(a) (((uint) (a)) - KERNBASE)
-//½«ÎïÀíµØÖ·×ªÎªĞéÄâµØÖ·£¬ÓÉÓÚxv6µÄÄÚ´æ½á¹¹£¬ÎïÀíµØÖ·ÊÇ±»Ó³ÉäÔÚĞéÄâµØÖ·µÄ¸ß2GµÄÎ»ÖÃµÄ
+//å°†ç‰©ç†åœ°å€è½¬ä¸ºè™šæ‹Ÿåœ°å€ï¼Œç”±äºxv6çš„å†…å­˜ç»“æ„ï¼Œç‰©ç†åœ°å€æ˜¯è¢«æ˜ å°„åœ¨è™šæ‹Ÿåœ°å€çš„é«˜2Gçš„ä½ç½®çš„
 #define P2V(a) ((void *)(((char *) (a)) + KERNBASE))
 
-#define V2P_WO(x) ((x) - KERNBASE)    // same as V2P, but without casts ÎŞÀàĞÍ×ª»»µÄV2P°æ±¾
-#define P2V_WO(x) ((x) + KERNBASE)    // same as P2V, but without casts ÎŞÀàĞÍ×ª»»µÄP2V°æ±¾
+#define V2P_WO(x) ((x) - KERNBASE)    // same as V2P, but without casts æ— ç±»å‹è½¬æ¢çš„V2Pç‰ˆæœ¬
+#define P2V_WO(x) ((x) + KERNBASE)    // same as P2V, but without casts æ— ç±»å‹è½¬æ¢çš„P2Vç‰ˆæœ¬

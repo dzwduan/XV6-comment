@@ -35,6 +35,7 @@ trapret:
   popl %fs
   popl %es
   popl %ds
+  #addl 跳过trapno和errcode两个数据
   addl $0x8, %esp  # trapno and errcode
   # iret会回到正常执行的用户代码，也就是出栈恢复int中压入的寄存器
   iret
