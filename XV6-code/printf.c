@@ -37,7 +37,7 @@ printint(int fd, int xx, int base, int sgn)
 }
 
 // Print to the given fd. Only understands %d, %x, %p, %s.
-//整体上与stdio的printf差不多，但是使用fd选择输出位置
+//鏁翠綋涓婁笌stdio鐨刾rintf宸笉澶氾紝浣嗘槸浣跨敤fd閫夋嫨杈撳嚭浣嶇疆
 void
 printf(int fd, const char *fmt, ...)
 {
